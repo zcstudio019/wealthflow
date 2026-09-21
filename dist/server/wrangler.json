@@ -1,0 +1,6 @@
+{
+  "main": "index.js",
+  "compatibility_date": "2026-09-01",
+  "assets": { "binding": "ASSETS", "directory": "../client" },
+  "d1_databases": [{ "binding": "DB", "database_name": "boss-wealth", "database_id": "00000000-0000-4000-8000-000000000000" }]
+}

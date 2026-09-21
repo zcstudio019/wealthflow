@@ -1,2 +1,10 @@
 .sites-runtime/
 *.tar.gz
+/node_modules/
+/.npm-cache/
+/.next/
+/.vinext/
+/dist/
+/.wrangler/
+.env*
+!.env.example
