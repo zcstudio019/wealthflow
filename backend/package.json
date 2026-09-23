@@ -1,0 +1,27 @@
+{
+  "name": "@wealthflow/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env --import tsx src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node --env-file-if-exists=.env dist/src/server.js",
+    "db:generate": "node --env-file-if-exists=.env ../node_modules/drizzle-kit/bin.cjs generate --config drizzle.config.ts",
+    "db:migrate": "node --env-file-if-exists=.env ../node_modules/drizzle-kit/bin.cjs migrate --config drizzle.config.ts",
+    "db:check": "node --env-file-if-exists=.env --import tsx src/scripts/db-check.ts",
+    "test:mysql": "node --env-file-if-exists=.env --import tsx src/scripts/mysql-integration.ts",
+    "test:precision": "node --import tsx src/scripts/financial-precision.ts",
+    "test:mysql:static": "node --import tsx src/scripts/mysql-static-check.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.2",
+    "mysql2": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.19",
+    "drizzle-kit": "0.31.10",
+    "tsx": "4.22.1",
+    "typescript": "5.9.3"
+  }
+}

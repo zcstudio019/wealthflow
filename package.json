@@ -1,0 +1,27 @@
+{
+  "name": "wealthflow",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:frontend": "npm run dev --workspace @wealthflow/frontend",
+    "dev:backend": "npm run dev --workspace @wealthflow/backend",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "npm run build --workspace @wealthflow/frontend",
+    "build:backend": "npm run build --workspace @wealthflow/backend",
+    "start:backend": "npm run start --workspace @wealthflow/backend",
+    "db:generate": "npm run db:generate --workspace @wealthflow/backend",
+    "db:migrate": "npm run db:migrate --workspace @wealthflow/backend",
+    "db:check": "npm run db:check --workspace @wealthflow/backend",
+    "test:mysql": "npm run test:mysql --workspace @wealthflow/backend",
+    "test:precision": "npm run test:precision --workspace @wealthflow/backend",
+    "test:mysql:static": "npm run test:mysql:static --workspace @wealthflow/backend"
+  }
+}
