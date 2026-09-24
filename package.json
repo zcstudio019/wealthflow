@@ -21,6 +21,8 @@
     "db:migrate": "npm run db:migrate --workspace @wealthflow/backend",
     "db:check": "npm run db:check --workspace @wealthflow/backend",
     "test:mysql": "npm run test:mysql --workspace @wealthflow/backend",
+    "test:auth": "npm run test:auth --workspace @wealthflow/backend",
+    "test:auth:static": "npm run test:auth:static --workspace @wealthflow/backend",
     "test:precision": "npm run test:precision --workspace @wealthflow/backend",
     "test:mysql:static": "npm run test:mysql:static --workspace @wealthflow/backend"
   }

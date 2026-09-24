@@ -30,19 +30,26 @@ function buildDatabaseUrl() {
 }
 
 const databaseUrl = buildDatabaseUrl();
+const isProduction = process.env.NODE_ENV === "production";
+const authSecret = process.env.AUTH_SECRET?.trim() || "";
+if (!authSecret) throw new Error("AUTH_SECRET is required.");
+if (authSecret && authSecret.length < 32) throw new Error("AUTH_SECRET must contain at least 32 characters.");
+
+const authCookieName = process.env.AUTH_COOKIE_NAME?.trim() || "wealthflow_session";
+if (!/^[A-Za-z0-9_-]+$/.test(authCookieName)) throw new Error("AUTH_COOKIE_NAME contains invalid characters.");
 
 export const config = {
   host: process.env.HOST?.trim() || "127.0.0.1",
   port: parseInteger("PORT", process.env.PORT, 8000, 1, 65535),
-  isProduction: process.env.NODE_ENV === "production",
+  isProduction,
   database: {
     url: databaseUrl,
     connectionLimit: parseInteger("DB_CONNECTION_LIMIT", process.env.DB_CONNECTION_LIMIT, 10, 1, 50),
     connectTimeout: parseInteger("DB_CONNECT_TIMEOUT", process.env.DB_CONNECT_TIMEOUT, 10_000, 1_000, 120_000),
   },
-  devUser: {
-    userId: process.env.DEV_USER_ID?.trim() || "local-development-user",
-    email: process.env.DEV_USER_EMAIL?.trim() || "local@wealthflow.test",
-    displayName: process.env.DEV_USER_NAME?.trim() || "本地开发用户",
+  auth: {
+    secret: authSecret,
+    cookieName: authCookieName,
+    sessionDays: parseInteger("AUTH_SESSION_DAYS", process.env.AUTH_SESSION_DAYS, 30, 1, 365),
   },
 };

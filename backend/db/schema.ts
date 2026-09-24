@@ -3,6 +3,19 @@ import { char, datetime, json, mysqlTable, uniqueIndex, varchar } from "drizzle-
 
 export type StoredFinancialData = Record<string, string>;
 
+export const users = mysqlTable("users", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  email: varchar("email", { length: 255 }).notNull(),
+  passwordHash: varchar("password_hash", { length: 255 }).notNull(),
+  displayName: varchar("display_name", { length: 100 }).notNull(),
+  status: varchar("status", { length: 20 }).notNull().default("active"),
+  createdAt: datetime("created_at", { mode: "date", fsp: 3 }).notNull().default(sql`CURRENT_TIMESTAMP(3)`),
+  updatedAt: datetime("updated_at", { mode: "date", fsp: 3 }).notNull().default(sql`CURRENT_TIMESTAMP(3)`),
+  lastLoginAt: datetime("last_login_at", { mode: "date", fsp: 3 }),
+}, (table) => [
+  uniqueIndex("users_email_unique").on(table.email),
+]);
+
 export const financialSnapshots = mysqlTable("financial_snapshots", {
   id: varchar("id", { length: 36 }).primaryKey(),
   userId: varchar("user_id", { length: 255 }).notNull(),

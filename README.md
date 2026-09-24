@@ -28,6 +28,8 @@ npm install
 
 复制 `backend/.env.example` 为 `backend/.env`，填写 MySQL 配置。优先读取 `DATABASE_URL`；未配置时读取分项 `DB_*` 变量。项目没有 SQLite、内存数据库或 localhost 数据库 fallback。
 
+认证使用 HttpOnly Cookie 中的签名 JWT。所有环境都必须配置至少 32 个字符的 `AUTH_SECRET`；生产环境缺少时后端会立即拒绝启动。`AUTH_SECRET` 只存放在服务器环境变量或 secret manager，不能提交到 Git。
+
 ## Migration
 
 ```bash
@@ -65,16 +67,18 @@ npm run dev:backend
 npm run build
 npm run test:precision
 npm run test:mysql:static
+npm run test:auth:static
 ```
 
 连接空白、可丢弃的 MySQL 8 测试库并执行 migration 后，才可运行写入集成测试：
 
 ```bash
 MYSQL_TEST_ALLOW_WRITE=1 npm run test:mysql
+MYSQL_TEST_ALLOW_WRITE=1 npm run test:auth
 ```
 
-该脚本拒绝在 `NODE_ENV=production` 下运行，并只清理自身随机测试用户的数据。
+这些脚本拒绝在 `NODE_ENV=production` 下运行，并只清理自身随机测试用户的数据。认证集成测试覆盖注册、重复邮箱、登录、错误密码、Cookie、退出和两用户快照隔离。
 
 ## 生产安全边界
 
-后端默认只监听回环地址。生产反向代理必须删除客户端传入的 `oai-authenticated-user-*` 头，并仅写入由可信认证层验证后的身份头；不要将 8000 端口直接暴露到 Internet。数据库账号使用最小权限，secret 仅保存在服务器环境变量或 secret manager 中。
+后端默认只监听回环地址，不要将 8000 端口直接暴露到 Internet。正式身份完全来自 `wealthflow_session` HttpOnly Cookie；后端不再信任客户端提交的 `user_id` 或旧 `oai-authenticated-user-*` 请求头。数据库账号使用最小权限，secret 仅保存在服务器环境变量或 secret manager 中。

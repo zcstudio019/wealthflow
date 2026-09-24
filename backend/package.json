@@ -11,11 +11,15 @@
     "db:migrate": "node --env-file-if-exists=.env ../node_modules/drizzle-kit/bin.cjs migrate --config drizzle.config.ts",
     "db:check": "node --env-file-if-exists=.env --import tsx src/scripts/db-check.ts",
     "test:mysql": "node --env-file-if-exists=.env --import tsx src/scripts/mysql-integration.ts",
+    "test:auth": "node --env-file-if-exists=.env --import tsx src/scripts/auth-integration.ts",
+    "test:auth:static": "node --import tsx src/scripts/auth-static-check.ts",
     "test:precision": "node --import tsx src/scripts/financial-precision.ts",
     "test:mysql:static": "node --import tsx src/scripts/mysql-static-check.ts"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "drizzle-orm": "0.45.2",
+    "jose": "^6.2.12",
     "mysql2": "^3.24.4"
   },
   "devDependencies": {
