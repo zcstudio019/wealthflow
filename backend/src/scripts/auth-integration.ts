@@ -68,6 +68,8 @@ try {
   const cookieA = cookieFrom(registerA);
   assert.match(registerA.headers.get("set-cookie") ?? "", /HttpOnly/);
   assert.match(registerA.headers.get("set-cookie") ?? "", /SameSite=Lax/);
+  const initialSnapshotsA = await json(await fetch(`${base}/api/snapshots`, { headers: { cookie: cookieA } }));
+  assert.equal((initialSnapshotsA.snapshots as unknown[]).length, 0);
 
   const duplicate = await post("/api/auth/register", { displayName: "重复用户", email: emailA, password });
   assert.equal(duplicate.status, 409);
@@ -103,6 +105,12 @@ try {
   assert.equal((snapshotsA.snapshots as unknown[]).length, 1);
   assert.equal((snapshotsB.snapshots as unknown[]).length, 0);
 
+  const reloginA = await post("/api/auth/login", { email: emailA, password });
+  assert.equal(reloginA.status, 200);
+  const reloginCookieA = cookieFrom(reloginA);
+  const snapshotsAfterReloginA = await json(await fetch(`${base}/api/snapshots`, { headers: { cookie: reloginCookieA } }));
+  assert.equal((snapshotsAfterReloginA.snapshots as unknown[]).length, 1);
+
   const logoutA = await post("/api/auth/logout", {}, loginCookieA);
   assert.equal(logoutA.status, 200);
   const clearedCookie = cookieFrom(logoutA);
@@ -116,7 +124,9 @@ try {
     wrongPassword: 401,
     cookieSession: "ok",
     logout: "ok",
+    newUserInitiallyEmpty: true,
     userIsolation: "ok",
+    reloginPersistence: "ok",
     plaintextPasswordStored: false,
   }));
 } finally {
