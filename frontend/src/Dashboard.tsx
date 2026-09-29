@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { apiUrl } from "./api";
+import { formatWanAmount as money } from "./formatters";
 
 type Values = Record<string, number | null>;
 type Snapshot = { id: string; month: string; data: Record<string, number>; updatedAt: string };
@@ -11,7 +12,6 @@ const groups = [
   ["未来30天的资金安排", [["incoming30","预计收款"],["outgoing30","必须付款"],["monthlyFixed","每月固定支出"]]],
 ] as const;
 
-function money(n:number){const a=Math.abs(n||0);return (n<0?"−":"")+"¥"+(a>=10000?(a/10000).toFixed(a>=1000000?0:1)+"万":a.toLocaleString("zh-CN"))}
 function currentMonth(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`}
 function monthName(m:string){const [y,mo]=m.split("-");return `${y}年${Number(mo)}月`}
 function amount(values:Values,key:string){return values[key]??0}
